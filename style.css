@@ -1,0 +1,155 @@
+/* Yemlee AI - Additional Styles */
+
+/* Enhanced animations and transitions */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(74, 222, 128, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.8); }
+}
+
+@keyframes slide-in-left {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fade-in-up {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Enhanced card animations */
+.card {
+    animation: fade-in-up 0.8s ease-out;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
+}
+
+/* Floating animation for icons */
+.floating-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Pulse animation for buttons */
+.pulse-button {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Slide animations for user stories */
+.slide-left {
+    animation: slide-in-left 1s ease-out;
+}
+
+.slide-right {
+    animation: slide-in-right 1s ease-out;
+}
+
+/* Enhanced glassmorphism */
+.glass-card {
+    background: rgba(23, 23, 23, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 1rem;
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Enhanced timeline */
+.timeline-item {
+    opacity: 0;
+    animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+
+/* Responsive enhancements */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .timeline-item {
+        padding-left: 1rem;
+    }
+    
+    .timeline-item::before {
+        left: -5px;
+    }
+    
+    .timeline-item::after {
+        left: 0;
+    }
+}
+
+/* Loading spinner for charts */
+.chart-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #4ade80;
+}
+
+.spinner {
+    border: 4px solid #374151;
+    border-top: 4px solid #4ade80;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Interactive elements */
+.interactive-hover:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+/* Text shadow for better readability */
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4ade80;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #22c55e;
+}
