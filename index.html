@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yemlee AI - Haber Odaklı Yapay Zeka ve Reklam Platformu</title>
+    <title>Yemlee AI - Haberin Zekası, Reklamın Geleceği</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             color: #f5f5f5;
             overflow-x: hidden;
         }
@@ -21,67 +23,46 @@
             left: 0;
             z-index: 1;
         }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
+        .hero-content { position: relative; z-index: 2; }
         .card {
-            background-color: rgba(23, 23, 23, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(23, 23, 23, 0.9);
+            border: 1px solid #4ade80;
+            border-radius: 1rem;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 30px rgba(0, 220, 130, 0.1);
-        }
-        .brand-text {
-            color: #4ade80;
-        }
+        .card:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(74, 222, 128, 0.2); }
+        .brand-text { color: #4ade80; }
         .password-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.95); display: flex; justify-content: center;
-            align-items: center; z-index: 9999; backdrop-filter: blur(5px);
-            transition: opacity 0.5s ease-in-out;
+            background: rgba(0, 0, 0, 0.95); display: flex; justify-content: center;
+            align-items: center; z-index: 9999; backdrop-filter: blur(8px);
         }
-        .password-box {
-            background-color: #171717; padding: 2rem; border-radius: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .scroll-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .chart-bar {
-            transition: width 1.5s ease-in-out;
-        }
+        .password-box { background: #171717; padding: 2.5rem; border-radius: 1rem; border: 1px solid #4ade80; }
+        .timeline-item { position: relative; padding-left: 2rem; margin-bottom: 2rem; }
+        .timeline-item::before { content: ''; position: absolute; left: 0; top: 0; width: 12px; height: 12px; background: #4ade80; border-radius: 50%; }
+        .timeline-item::after { content: ''; position: absolute; left: 5px; top: 20px; bottom: -20px; width: 2px; background: #4ade80; }
+        .timeline-item:last-child::after { display: none; }
     </style>
 </head>
 <body class="antialiased">
 
     <div id="password-overlay" class="password-overlay">
         <div class="password-box">
-            <h2 class="text-2xl font-bold mb-4 text-white">Yemlee AI Sunumu</h2>
+            <h2 class="text-3xl font-bold mb-6 text-white">Yemlee AI Sunumu</h2>
             <p class="text-gray-400 mb-6">Lütfen giriş şifresini girin.</p>
-            <input type="password" id="password-input" class="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5" placeholder="Şifre">
-            <button id="password-submit" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+            <input type="password" id="password-input" class="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-3" placeholder="Şifre">
+            <button id="password-submit" class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">
                 Giriş Yap
             </button>
-            <p id="error-message" class="text-red-500 mt-2 text-sm hidden">Hatalı şifre. Lütfen tekrar deneyin.</p>
+            <p id="error-message" class="text-red-500 mt-4 text-sm hidden">Hatalı şifre. Lütfen tekrar deneyin.</p>
         </div>
     </div>
 
     <main id="main-content" class="hidden">
         <header class="absolute top-0 left-0 w-full z-10 p-6">
             <div class="container mx-auto flex justify-between items-center hero-content">
-                <h1 class="text-3xl font-black tracking-tighter">Yemlee<span class="brand-text">.ai</span></h1>
-                <a href="#investment" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded-full transition-transform transform hover:scale-105">
+                <h1 class="text-4xl font-black tracking-tight">Yemlee<span class="brand-text">.ai</span></h1>
+                <a href="#investment" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-full transition-transform hover:scale-110 animate-pulse">
                     Yatırım Fırsatı
                 </a>
             </div>
@@ -90,94 +71,103 @@
         <section class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
             <div id="particles-js"></div>
             <div class="hero-content container mx-auto px-6">
-                <h2 class="text-5xl md:text-7xl font-black tracking-tighter leading-tight mb-4 scroll-reveal">
+                <h2 class="text-6xl md:text-8xl font-black tracking-tight leading-tight mb-6 animate-fade-in">
                     Haberin Zekası. Reklamın Geleceği.
                 </h2>
-                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-300 mb-8 scroll-reveal" style="transition-delay: 200ms;">
-                    <span class="brand-text font-semibold">Yemlee AI</span>, yüz binlerce haber sitesini tek bir ekosistemde birleştiren, reklam verenlere eşsiz erişim, yayıncılara adil kazanç ve kullanıcılara en gelişmiş yapay zeka araçlarını sunan devrim niteliğinde bir platformdur.
+                <p class="text-xl md:text-2xl max-w-4xl mx-auto text-gray-300 mb-10 animate-fade-in-delay">
+                    <span class="brand-text font-semibold">Yemlee AI</span>, 100.000+ haber sitesini tek bir ekosistemde birleştirerek reklam verenlere erişim, yayıncılara adil kazanç ve kullanıcılara yapay zeka gücü sunar.
                 </p>
             </div>
         </section>
 
-        <section class="py-20">
+        <section class="py-24 bg-gray-900/70">
             <div class="container mx-auto px-6">
-                <div class="text-center mb-16 scroll-reveal">
-                    <h3 class="text-4xl font-bold tracking-tight">Platformun Temel Taşları</h3>
-                    <p class="text-gray-400 mt-2">Dört ana servisimizle dijital medya ve reklamcılıkta yeni bir çağ başlatıyoruz.</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- Card 1: Reklam Modülü -->
-                    <div class="card p-8 rounded-2xl scroll-reveal">
-                        <div class="flex items-center mb-4">
-                            <svg class="w-12 h-12 brand-text mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            <h4 class="text-2xl font-bold">Akıllı Reklam Modülü</h4>
-                        </div>
-                        <p class="text-gray-300 mb-4">Google'a güçlü bir alternatif sunuyoruz. Reklam bütçenizin büyük kısmını doğrudan yayıncılara aktararak daha adil bir kazanç sağlıyoruz.</p>
-                        <div class="space-y-3 text-sm" id="chart">
-                             <p class="text-gray-400">Yayıncı Kazanç Payı Karşılaştırması:</p>
-                             <div class="flex items-center">
-                                 <span class="w-24">Google</span>
-                                 <div class="w-full bg-gray-700 rounded-full h-4"><div id="google-bar" class="chart-bar bg-red-500 h-4 rounded-full" style="width: 20%;"></div></div>
-                                 <span class="ml-3 font-bold">~%20</span>
-                             </div>
-                             <div class="flex items-center">
-                                 <span class="w-24 brand-text">Yemlee AI</span>
-                                 <div class="w-full bg-gray-700 rounded-full h-4"><div id="yemlee-bar" class="chart-bar bg-green-500 h-4 rounded-full" style="width: 0%;"></div></div>
-                                 <span id="yemlee-percent" class="ml-3 font-bold">~%60</span>
-                             </div>
-                        </div>
+                <h3 class="text-5xl font-bold text-center mb-12 brand-text">Platformun Gücü</h3>
+                <div class="grid md:grid-cols-4 gap-8">
+                    <div class="card p-6 text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 brand-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        <h4 class="text-2xl font-bold mb-2">Akıllı Reklam</h4>
+                        <p class="text-gray-400">Google’a alternatif, %60+ kazanç payı ile haber sitelerinde devrim.</p>
                     </div>
-
-                    <!-- Card 2: Haber Arama Motoru -->
-                    <div class="card p-8 rounded-2xl scroll-reveal">
-                         <div class="flex items-center mb-4">
-                            <svg class="w-12 h-12 brand-text mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            <h4 class="text-2xl font-bold">Yapay Zeka Arama Motoru</h4>
-                        </div>
-                        <p class="text-gray-300">Yüz binlerce haber sitesindeki metinleri anlık olarak vektöre dönüştürerek, piyasadaki en hızlı ve en isabetli haber arama deneyimini sunuyoruz. Aradığınız her konu, anında ve tüm kaynaklardan karşınızda.</p>
+                    <div class="card p-6 text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 brand-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <h4 class="text-2xl font-bold mb-2">AI Arama Motoru</h4>
+                        <p class="text-gray-400">Anlık, vektörel haber araması ile eşsiz hız.</p>
                     </div>
-
-                    <!-- Card 3: Entegre AI Araçları -->
-                    <div class="card p-8 rounded-2xl scroll-reveal">
-                         <div class="flex items-center mb-4">
-                            <svg class="w-12 h-12 brand-text mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                            <h4 class="text-2xl font-bold">Sınırsız Yaratıcılık için AI Araçları</h4>
-                        </div>
-                        <p class="text-gray-300">Reklam tasarımlarını veya bulduğunuz haberleri entegre yapay zeka araçlarımızla işleyin. Tweetler, sosyal medya gönderileri, görseller veya videolar oluşturun; sınırlar hayal gücünüz.</p>
+                    <div class="card p-6 text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 brand-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                        <h4 class="text-2xl font-bold mb-2">AI Yaratıcı Araçlar</h4>
+                        <p class="text-gray-400">Reklam, görsel ve video üretiminde sınırsız özgürlük.</p>
                     </div>
-
-                    <!-- Card 4: PR Faaliyetleri -->
-                    <div class="card p-8 rounded-2xl scroll-reveal">
-                         <div class="flex items-center mb-4">
-                            <svg class="w-12 h-12 brand-text mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3h2m-4 3H9m-4 6h6m-1 4h1m5-13l-3 3m0 0l-3-3m3 3V4"></path></svg>
-                            <h4 class="text-2xl font-bold">Stratejik PR ve Medya Gücü</h4>
-                        </div>
-                        <p class="text-gray-300">Markanızın veya şahsınızın tanıtımını, yüz binlerce haber sitesinden oluşan ağımızda yayınlatarak yapın. PR çalışmalarınız için benzersiz bir erişim ve etki gücü sunuyoruz.</p>
+                    <div class="card p-6 text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 brand-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3h2m-4 3H9m-4 6h6m-1 4h1m5-13l-3 3m0 0l-3-3m3 3V4"/></svg>
+                        <h4 class="text-2xl font-bold mb-2">PR ve Medya</h4>
+                        <p class="text-gray-400">100.000+ sitede güçlü marka hikayeleri.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="investment" class="py-20 bg-gray-900/50">
+        <section class="py-24">
+            <div class="container mx-auto px-6">
+                <h3 class="text-5xl font-bold text-center mb-12 brand-text">Kullanıcı Hikayeleri</h3>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Ahmet'in Hikayesi -->
+                    <div class="card p-6">
+                        <h4 class="text-2xl font-bold mb-4 brand-text">Ahmet’in Reklam Yolculuğu</h4>
+                        <div class="timeline">
+                            <div class="timeline-item mb-6">
+                                <p class="text-gray-300">Ahmet, aylık 50M TL Google reklam harcaması yapan bir işletme sahibi.</p>
+                            </div>
+                            <div class="timeline-item mb-6">
+                                <p class="text-gray-300">Yemlee AI’ya katılır, reklamını 100.000+ haber sitesinde yayınlar.</p>
+                            </div>
+                            <div class="timeline-item mb-6">
+                                <p class="text-gray-300">AI araçlarla reklam tasarımı yapar, %60 kazanç payı alır.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <p class="text-gray-300">Google’a göre %30 daha fazla erişim ve tasarruf elde eder.</p>
+                            </div>
+                        </div>
+                        <canvas id="ahmetChart" class="mt-6"></canvas>
+                    </div>
+                    <!-- Ayşe'nin Hikayesi -->
+                    <div class="card p-6">
+                        <h4 class="text-2xl font-bold mb-4 brand-text">Ayşe’nin Haber Deneyimi</h4>
+                        <div class="timeline">
+                            <div class="timeline-item mb-6">
+                                <p class="text-gray-300">Ayşe, bir gazeteci olarak haber arar.</p>
+                            </div>
+                            <div class="timeline-item mb-6">
+                                <p class="text-gray-300">Yemlee AI ile anlık haberlere ulaşır.</p>
+                            </div>
+                            <div class="timeline-item mb-6">
+                                <p class="text-gray-300">AI araçlarla haberden tweet ve video üretir.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <p class="text-gray-300">Sosyal medyada 10x daha hızlı paylaşım yapar.</p>
+                            </div>
+                        </div>
+                        <canvas id="ayseChart" class="mt-6"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="investment" class="py-24 bg-green-900/50">
             <div class="container mx-auto px-6 text-center">
-                 <div class="max-w-3xl mx-auto scroll-reveal">
-                    <h3 class="text-4xl font-bold tracking-tight mb-4">Geleceği Birlikte İnşa Edelim: Yatırım Çağrısı</h3>
-                    <p class="text-gray-300 text-lg mb-8">
-                        %100 yerli mühendis ekibimizle geliştirdiğimiz bu devrimci platformu hayata geçirmek için son bir adım kaldı. Projemizi 45-60 gün içinde tam faaliyete geçirebilmek için <strong class="brand-text text-xl">5-10 Milyon TL</strong> arası bir yatırıma ihtiyaç duyuyoruz.
-                    </p>
-                     <div class="card p-8 rounded-2xl max-w-2xl mx-auto border-green-500/50">
-                         <h4 class="text-2xl font-bold mb-3">Vizyonumuz: Haber Tabanlı Yapay Zeka</h4>
-                         <p class="text-gray-300">
-                             Sistemimizde biriktireceğimiz 2-3 yıllık vektörel haber verisiyle, veri madenciliği yaparak dünyada bir ilk olan <strong class="font-bold">haber tabanlı yapay zeka dil modelini</strong> geliştirmeyi hedefliyoruz. Bu, global teknoloji dünyası için bir mihenk taşı olacaktır.
-                         </p>
-                     </div>
-                 </div>
+                <h3 class="text-5xl font-bold mb-6 brand-text">Yatırım Fırsatı</h3>
+                <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                    5-10M TL ile 45-60 gün içinde global bir lider olacağız. 2-3 yıl sonra haber tabanlı AI modeliyle dünya çapında bir ilk!
+                </p>
+                <a href="mailto:invest@yemlee.ai" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-110">
+                    Hemen Yatırım Yap
+                </a>
             </div>
         </section>
 
-        <footer class="text-center py-10 border-t border-gray-800">
-            <p class="text-gray-500">&copy; 2025 Yemlee AI. Tüm hakları saklıdır. %100 Yerli ve Milli Teknoloji.</p>
+        <footer class="text-center py-12 border-t border-gray-800">
+            <p class="text-gray-500">© 2025 Yemlee AI. %100 Yerli ve Milli Teknoloji.</p>
         </footer>
     </main>
 
