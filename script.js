@@ -4,20 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordSubmit = document.getElementById('password-submit');
     const mainContent = document.getElementById('main-content');
     const errorMessage = document.getElementById('error-message');
-
-    // 1. İsteğiniz üzerine şifre güncellendi.
     const correctPassword = 'yemlee.3438';
 
     const checkPassword = () => {
         if (passwordInput.value === correctPassword) {
-            passwordOverlay.style.opacity = '0';
-            setTimeout(() => {
+            gsap.to(passwordOverlay, { opacity: 0, duration: 0.5, onComplete: () => {
                 passwordOverlay.style.display = 'none';
-                // 2. Ana içeriği gösteren 'hidden' class'ı kaldırıldı.
                 mainContent.classList.remove('hidden');
-                // 3. Animasyonları başlatan fonksiyon çağrıldı.
                 initAnimations();
-            }, 500); // Animasyonun bitmesi için yarım saniye bekle
+            }});
         } else {
             errorMessage.style.display = 'block';
             passwordInput.focus();
@@ -25,62 +20,31 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     passwordSubmit.addEventListener('click', checkPassword);
-    passwordInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') checkPassword();
-    });
-
-    // Sayfa ilk açıldığında şifre kutusuna odaklan
+    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
     passwordInput.focus();
 
     function initAnimations() {
-        // Arka Plan Animasyonu (particles.js)
-        if (typeof particlesJS !== 'undefined') {
-            particlesJS('particles-js', {
-                "particles": {
-                    "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#4ade80" },
-                    "shape": { "type": "circle" },
-                    "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
-                    "size": { "value": 3, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.2, "width": 1 },
-                    "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" }
-                },
-                "interactivity": {
-                    "detect_on": "canvas",
-                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
-                    "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } }, "push": { "particles_nb": 4 } }
-                },
-                "retina_detect": true
-            });
-        }
+        // Particles.js
+        particlesJS('particles-js', {
+            particles: { number: { value: 100, density: { enable: true, value_area: 800 } }, color: { value: '#4ade80' }, shape: { type: 'circle' }, opacity: { value: 0.6, random: true }, size: { value: 4, random: true }, line_linked: { enable: true, distance: 150, color: '#4ade80', opacity: 0.3 }, move: { enable: true, speed: 2 } },
+            interactivity: { detect_on: 'canvas', events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } } }
+        });
 
-        // Kaydırma Animasyonları (Intersection Observer)
-        const revealElements = document.querySelectorAll('.scroll-reveal');
-        const observerOptions = {
-            root: null,
-            threshold: 0.1
-        };
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Animasyon bir kere çalıştıktan sonra gözlemciyi durdurabiliriz.
-                    // observer.unobserve(entry.target); 
-                }
-            });
-        }, observerOptions);
-        revealElements.forEach(el => observer.observe(el));
+        // GSAP Animations
+        gsap.from('.animate-fade-in', { opacity: 0, y: 50, duration: 1, stagger: 0.2 });
+        gsap.from('.animate-fade-in-delay', { opacity: 0, y: 50, duration: 1, delay: 0.5 });
 
-        // Grafik Animasyonu
-        const chart = document.getElementById('chart');
-        if (chart) {
-            const chartObserver = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    document.getElementById('yemlee-bar').style.width = '60%';
-                    chartObserver.unobserve(chart); // Animasyon bir kere çalışsın
-                }
-            }, { threshold: 0.8 });
-            chartObserver.observe(chart);
-        }
+        // Charts
+        const ahmetChart = new Chart(document.getElementById('ahmetChart'), {
+            type: 'bar',
+            data: { labels: ['Google Erişim', 'Yemlee Erişim'], datasets: [{ label: 'Kullanıcı Erişimi', data: [100, 130], backgroundColor: ['#ef4444', '#4ade80'] }] },
+            options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+        });
+
+        const ayseChart = new Chart(document.getElementById('ayseChart'), {
+            type: 'line',
+            data: { labels: ['Arama', 'Düzenleme', 'Paylaşım'], datasets: [{ label: 'Süre (Dakika)', data: [5, 3, 2], borderColor: '#4ade80', fill: false }] },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
     }
 });
